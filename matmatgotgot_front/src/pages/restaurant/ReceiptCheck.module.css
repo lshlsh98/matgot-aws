@@ -443,7 +443,8 @@
   background-color: var(--text1);
   border-radius: 8px;
   color: var(--gray8);
-  font-size: 600;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .confirmBtn_zone button:hover {
