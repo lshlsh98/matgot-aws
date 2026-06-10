@@ -47,19 +47,20 @@
 /* 좌측 텍스트 입력창 공통 스타일 — 노란색 배경 */
 .info_left input {
   width: 100%;
-  background-color: var(--primary);
-  border: none;
+  height: 40px;
+  background-color: var(--bg);
+  border: 1.5px solid var(--gray6);
   border-radius: 8px;
-  padding: 9px 12px;
+  padding: 0 12px;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text1);
   outline: none;
-  transition: box-shadow 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 
 .info_left input:focus {
-  box-shadow: 0 0 0 2px rgba(255, 217, 90, 0.6);
+  border-color: var(--gray4);
 }
 
 /* ========== 우측: 지도 ========== */
