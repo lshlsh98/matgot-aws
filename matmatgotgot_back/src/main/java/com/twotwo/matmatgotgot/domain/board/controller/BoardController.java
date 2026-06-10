@@ -5,20 +5,18 @@ import com.twotwo.matmatgotgot.domain.board.entity.BoardComment;
 import com.twotwo.matmatgotgot.domain.board.entity.ListItem;
 import com.twotwo.matmatgotgot.domain.board.entity.ListResponse;
 import com.twotwo.matmatgotgot.domain.board.service.BoardService;
+import com.twotwo.matmatgotgot.global.util.S3FileUtil;
 
-import com.twotwo.matmatgotgot.global.util.FileUtil;
 import lombok.RequiredArgsConstructor;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -29,10 +27,7 @@ import java.util.Map;
 public class BoardController {
 
     private final BoardService boardService;
-    private final FileUtil fileUtil;
-
-    @Value("${file.root}")
-    private String root;
+    private final S3FileUtil s3FileUtil;
 
     // 게시글 목록 조회
     @GetMapping
@@ -64,19 +59,12 @@ public class BoardController {
         return ResponseEntity.ok(response);
     }
 
-    // 이미지 업로드 (원래 코드 유지)
+    // 이미지 업로드
     @PostMapping("/image-upload")
     public ResponseEntity<?> imageUpload(
             @ModelAttribute MultipartFile image
     ) {
-        String savePath = root + "editor/";
-        File dir = new File(savePath);
-
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        String filePath = fileUtil.upload(savePath, image);
+        String filePath = s3FileUtil.upload("editor", image);
         return ResponseEntity.ok(filePath);
     }
 
@@ -132,26 +120,28 @@ public class BoardController {
         // 첫 번째 이미지 추출
         Document doc = Jsoup.parse(board.getBoardContent());
         Element firstImg = doc.selectFirst("img");
-        String boardThumb = null;
+        String boardThumb = firstImg == null ? null : firstImg.attr("src");
 
-        if (firstImg != null) {
-            String imgSrc = firstImg.attr("src");
+//        String boardThumb = null;
+//
+//        if (firstImg != null) {
+//            String imgSrc = firstImg.attr("src");
 
-            // 주소에 어떤 도메인이나 쿼리 스트링이 붙어있든 상관없이 오직 순수한 파일명(예: b5dbbf41-c310-....jpg)만 안전하게 추출
-            if (imgSrc.contains("/editor/")) {
-                // /editor/ 뒷부분만 싹 잘라냄
-                boardThumb = imgSrc.substring(imgSrc.lastIndexOf("/editor/") + 8);
-            } else if (imgSrc.contains("/")) {
-                boardThumb = imgSrc.substring(imgSrc.lastIndexOf("/") + 1);
-            } else {
-                boardThumb = imgSrc;
-            }
+//            // 주소에 어떤 도메인이나 쿼리 스트링이 붙어있든 상관없이 오직 순수한 파일명(예: b5dbbf41-c310-....jpg)만 안전하게 추출
+//            if (imgSrc.contains("/editor/")) {
+//                // /editor/ 뒷부분만 싹 잘라냄
+//                boardThumb = imgSrc.substring(imgSrc.lastIndexOf("/editor/") + 8);
+//            } else if (imgSrc.contains("/")) {
+//                boardThumb = imgSrc.substring(imgSrc.lastIndexOf("/") + 1);
+//            } else {
+//                boardThumb = imgSrc;
+//            }
 
             // 물음표(?)나 파라미터가 뒤에 붙어있을 경우를 대비해 순수 파일명만 한 번 더 정제
-            if (boardThumb.contains("?")) {
-                boardThumb = boardThumb.substring(0, boardThumb.indexOf("?"));
-            }
-        }
+//            if (boardThumb.contains("?")) {
+//                boardThumb = boardThumb.substring(0, boardThumb.indexOf("?"));
+//            }
+//        }
 
         // DB에 'b5dbbf41-c310-4c88-86ba-7dff76bb10df.jpg' 같은 파일명만 들어감
         // 이렇게 저장되어야 리액트 BoardList.jsx의 `${import.meta.env.VITE_BACKSERVER}/editor/${board.boardThumb}` 코드와 결합됨
@@ -249,8 +239,8 @@ public class BoardController {
             @RequestBody Map<String, Object> reportData,
 
 
-        // 로그인 구현 완료 시 사용할 코드
-        @RequestHeader("Authorization") String token
+            // 로그인 구현 완료 시 사용할 코드
+            @RequestHeader("Authorization") String token
 
 
             // 로그인 구현 전 테스트용 코드
@@ -371,8 +361,8 @@ public class BoardController {
             @PathVariable Integer boardCommentNo,
             @RequestBody Map<String, Object> reportData,
 
-        // 로그인 구현 완료 시 사용할 코드
-        @RequestHeader("Authorization") String token
+            // 로그인 구현 완료 시 사용할 코드
+            @RequestHeader("Authorization") String token
 
 
             // 로그인 구현 전 테스트용 코드
@@ -394,8 +384,8 @@ public class BoardController {
             @PathVariable Integer boardCommentNo,
 
 
-        // 로그인 구현 완료 시 사용할 코드
-        @RequestHeader("Authorization") String token
+            // 로그인 구현 완료 시 사용할 코드
+            @RequestHeader("Authorization") String token
 
 
             // 로그인 구현 전 테스트용 코드
@@ -412,8 +402,8 @@ public class BoardController {
             @PathVariable Integer boardCommentNo,
 
 
-        // 로그인 구현 완료 시 사용할 코드
-        @RequestHeader("Authorization") String token
+            // 로그인 구현 완료 시 사용할 코드
+            @RequestHeader("Authorization") String token
 
 
             // 로그인 구현 전 테스트용 코드
