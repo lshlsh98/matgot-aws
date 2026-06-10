@@ -513,7 +513,7 @@
         member_id,
         rest_no,
         reason
-        <if test="reason == '기�?'">
+        <if test="reason == '기�?'">
             , detail
         </if>
         )
@@ -521,7 +521,7 @@
         #{memberId},
         #{no},
         #{reason}
-        <if test="reason == '기�?'">
+        <if test="reason == '기�?'">
             , #{detail}
         </if>
         )
@@ -532,7 +532,7 @@
         member_id,
         review_no,
         reason
-        <if test="reason == '기�?'">
+        <if test="reason == '기�?'">
             , detail
         </if>
         )
@@ -540,7 +540,7 @@
         #{memberId},
         #{no},
         #{reason}
-        <if test="reason == '기�?'">
+        <if test="reason == '기�?'">
             , #{detail}
         </if>
         )
@@ -551,7 +551,7 @@
         member_id,
         comment_no,
         reason
-        <if test="reason == '기�?'">
+        <if test="reason == '기�?'">
             , detail
         </if>
         )
@@ -559,7 +559,7 @@
         #{memberId},
         #{no},
         #{reason}
-        <if test="reason == '기�?'">
+        <if test="reason == '기�?'">
             , #{detail}
         </if>
         )

@@ -21,19 +21,15 @@
                 </when>
 
                 <when test='"??.equals(keyword)'>
-                    rest_name &gt;= '?? AND rest_name &lt; 'ë§?
+                    rest_name &gt;= '?? AND rest_name &lt; 'ï¿½?
                 </when>
 
                 <when test='"??.equals(keyword)'>
-                    rest_name &gt;= 'ë§? AND rest_name &lt; 'ë°?
+                    rest_name &gt;= 'ï¿½? AND rest_name &lt; 'ï¿½?
                 </when>
 
                 <when test='"??.equals(keyword)'>
-                    rest_name &gt;= 'ë°? AND rest_name &lt; '??
-                </when>
-
-                <when test='"??.equals(keyword)'>
-                    rest_name &gt;= '?? AND rest_name &lt; '??
+                    rest_name &gt;= 'ï¿½? AND rest_name &lt; '??
                 </when>
 
                 <when test='"??.equals(keyword)'>
@@ -41,19 +37,23 @@
                 </when>
 
                 <when test='"??.equals(keyword)'>
-                    rest_name &gt;= '?? AND rest_name &lt; 'ì°?
+                    rest_name &gt;= '?? AND rest_name &lt; '??
                 </when>
 
                 <when test='"??.equals(keyword)'>
-                    rest_name &gt;= 'ì°? AND rest_name &lt; 'ì¹?
+                    rest_name &gt;= '?? AND rest_name &lt; 'ï¿½?
                 </when>
 
                 <when test='"??.equals(keyword)'>
-                    rest_name &gt;= 'ì¹? AND rest_name &lt; '?€'
+                    rest_name &gt;= 'ï¿½? AND rest_name &lt; 'ï¿½?
                 </when>
 
                 <when test='"??.equals(keyword)'>
-                    rest_name &gt;= '?€' AND rest_name &lt; '??
+                    rest_name &gt;= 'ï¿½? AND rest_name &lt; '?ï¿½'
+                </when>
+
+                <when test='"??.equals(keyword)'>
+                    rest_name &gt;= '?ï¿½' AND rest_name &lt; '??
                 </when>
 
                 <when test='"??.equals(keyword)'>
