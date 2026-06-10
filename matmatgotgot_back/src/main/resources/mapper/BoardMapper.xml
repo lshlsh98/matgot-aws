@@ -11,8 +11,8 @@
             resultType="int">
 
         SELECT COUNT(*)
-        FROM BOARD_TBL B
-        JOIN MEMBER_TBL M
+        FROM board_tbl B
+        JOIN member_tbl M
         ON B.MEMBER_NO = M.MEMBER_NO
 
         <where>
@@ -63,9 +63,9 @@
         M.MEMBER_ID AS BOARD_WRITER,
         M.MEMBER_THUMB
 
-        FROM BOARD_TBL B
+        FROM board_tbl B
 
-        JOIN MEMBER_TBL M
+        JOIN member_tbl M
         ON B.MEMBER_NO = M.MEMBER_NO
 
         <where>
@@ -114,7 +114,7 @@
 
     </select>
 
-    <!-- 내 게시물 목록 -->
+    <!-- ??게시�?목록 -->
     <select id="selectMyBoardList" resultType="board">
         SELECT
         B.BOARD_NO,
@@ -124,9 +124,9 @@
         COUNT(DISTINCT L.MEMBER_NO) AS BOARD_LIKE,
         COUNT(DISTINCT C.BOARD_COMMENT_NO) AS BOARD_COMMENT,
         DATE_FORMAT(B.BOARD_DATE, '%Y-%m-%d') AS BOARD_DATE
-        FROM BOARD_TBL B
-        JOIN MEMBER_TBL M ON B.MEMBER_NO = M.MEMBER_NO
-        LEFT JOIN BOARD_LIKE_TBL L ON B.BOARD_NO = L.BOARD_NO       LEFT JOIN BOARD_COMMENT_TBL C ON B.BOARD_NO = C.BOARD_NO    <where>
+        FROM board_tbl B
+        JOIN member_tbl M ON B.MEMBER_NO = M.MEMBER_NO
+        LEFT JOIN board_like_tbl L ON B.BOARD_NO = L.BOARD_NO       LEFT JOIN board_comment_tbl C ON B.BOARD_NO = C.BOARD_NO    <where>
         B.MEMBER_NO = #{memberNo} </where>
 
         GROUP BY B.BOARD_NO <choose>
@@ -153,10 +153,10 @@
         COUNT(DISTINCT L.MEMBER_NO) AS BOARD_LIKE,
         COUNT(DISTINCT C.BOARD_COMMENT_NO) AS BOARD_COMMENT,
         DATE_FORMAT(B.BOARD_DATE, '%Y-%m-%d') AS BOARD_DATE
-        FROM BOARD_TBL B
-        JOIN MEMBER_TBL M ON B.MEMBER_NO = M.MEMBER_NO
-        LEFT JOIN BOARD_LIKE_TBL L ON B.BOARD_NO = L.BOARD_NO
-        LEFT JOIN BOARD_COMMENT_TBL C ON B.BOARD_NO = C.BOARD_NO
+        FROM board_tbl B
+        JOIN member_tbl M ON B.MEMBER_NO = M.MEMBER_NO
+        LEFT JOIN board_like_tbl L ON B.BOARD_NO = L.BOARD_NO
+        LEFT JOIN board_comment_tbl C ON B.BOARD_NO = C.BOARD_NO
         <where>
         L.MEMBER_NO = #{memberNo}
 
@@ -187,11 +187,11 @@
         COUNT(DISTINCT L.MEMBER_NO) AS BOARD_LIKE,
         COUNT(DISTINCT C.BOARD_COMMENT_NO) AS BOARD_COMMENT,
         DATE_FORMAT(B.BOARD_DATE, '%Y-%m-%d') AS BOARD_DATE
-        FROM BOARD_TBL B
-        JOIN MEMBER_TBL M ON B.MEMBER_NO = M.MEMBER_NO
-        LEFT JOIN BOARD_REPORT_TBL R ON B.MEMBER_NO = R.MEMBER_NO
-        LEFT JOIN BOARD_LIKE_TBL L ON B.BOARD_NO = L.BOARD_NO
-        LEFT JOIN BOARD_COMMENT_TBL C ON B.BOARD_NO = C.BOARD_NO
+        FROM board_tbl B
+        JOIN member_tbl M ON B.MEMBER_NO = M.MEMBER_NO
+        LEFT JOIN board_report_tbl R ON B.MEMBER_NO = R.MEMBER_NO
+        LEFT JOIN board_like_tbl L ON B.BOARD_NO = L.BOARD_NO
+        LEFT JOIN board_comment_tbl C ON B.BOARD_NO = C.BOARD_NO
         <where>
             L.MEMBER_NO = #{memberNo}
 
@@ -212,10 +212,10 @@
         LIMIT #{request.offset}, #{request.size}
     </select>
 
-    <!-- 게시글 등록 -->
+    <!-- 게시글 ?�록 -->
     <insert id="insertBoard">
 
-        INSERT INTO BOARD_TBL
+        INSERT INTO board_tbl
         (
             MEMBER_NO,
             BOARD_CATEGORY,
@@ -236,11 +236,11 @@
 
     </insert>
 
-    <!-- 게시글 수정 -->
+    <!-- 게시글 ?�정 -->
     <update id="updateBoard"
             parameterType="board">
 
-        UPDATE BOARD_TBL
+        UPDATE board_tbl
         SET
             BOARD_CATEGORY = #{boardCategory},
             BOARD_TITLE = #{boardTitle},
@@ -250,17 +250,17 @@
 
     </update>
 
-    <!-- 게시글 삭제 -->
+    <!-- 게시글 ??�� -->
     <update id="deleteBoard"
             parameterType="int">
 
-        UPDATE BOARD_TBL
+        UPDATE board_tbl
         SET BOARD_STATUS = 2
         WHERE BOARD_NO = #{boardNo}
 
     </update>
 
-    <!-- 게시글 상세 -->
+    <!-- 게시글 ?�세 -->
     <select id="selectOneBoard"
             parameterType="int"
             resultType="board">
@@ -284,37 +284,37 @@
             P.PLACE_LAT,
             P.PLACE_LNG
 
-        FROM BOARD_TBL B
+        FROM board_tbl B
 
-                 JOIN MEMBER_TBL M
+                 JOIN member_tbl M
                       ON B.MEMBER_NO = M.MEMBER_NO
 
-                 JOIN BOARD_PLACE_TBL P
+                 JOIN board_place_tbl P
                       ON B.PLACE_NO = P.PLACE_NO
 
         WHERE B.BOARD_NO = #{boardNo}
 
     </select>
 
-    <!-- 장소 번호 조회 -->
+    <!-- ?�소 번호 조회 -->
     <select id="selectPlaceNo"
             parameterType="board"
             resultType="int">
 
         SELECT PLACE_NO
-        FROM BOARD_PLACE_TBL
+        FROM board_place_tbl
         WHERE PLACE_NAME = #{placeName}
           AND ADDRESS_NAME = #{addressName}
 
     </select>
 
-    <!-- 장소 저장 -->
+    <!-- ?�소 ?�??-->
     <insert id="insertPlace"
             parameterType="board"
             useGeneratedKeys="true"
             keyProperty="placeNo">
 
-        INSERT INTO BOARD_PLACE_TBL
+        INSERT INTO board_place_tbl
         (
             PLACE_NAME,
             ADDRESS_NAME,
@@ -331,24 +331,24 @@
 
     </insert>
 
-    <!-- 좋아요 개수 -->
+    <!-- 좋아??개수 -->
     <select id="selectLikeCount" resultType="int">
         SELECT COUNT(*)
-        FROM BOARD_LIKE_TBL
+        FROM board_like_tbl
         WHERE BOARD_NO = #{boardNo}
     </select>
 
-    <!-- 내가 좋아요 눌렀는지 -->
+    <!-- ?��? 좋아???��??��? -->
     <select id="selectIsLike" resultType="int">
         SELECT COUNT(*)
-        FROM BOARD_LIKE_TBL
+        FROM board_like_tbl
         WHERE BOARD_NO = #{boardNo}
           AND MEMBER_NO = #{memberNo}
     </select>
 
-    <!-- 좋아요 -->
+    <!-- 좋아??-->
     <insert id="insertLike">
-        INSERT INTO BOARD_LIKE_TBL
+        INSERT INTO board_like_tbl
         (
             MEMBER_NO,
             BOARD_NO
@@ -360,31 +360,31 @@
             )
     </insert>
 
-    <!-- 좋아요 취소 -->
+    <!-- 좋아??취소 -->
     <delete id="deleteLike">
-        DELETE FROM BOARD_LIKE_TBL
+        DELETE FROM board_like_tbl
         WHERE MEMBER_NO = #{memberNo}
           AND BOARD_NO = #{boardNo}
     </delete>
 
-    <!-- 신고 개수 -->
+    <!-- ?�고 개수 -->
     <select id="selectReportCount" resultType="int">
         SELECT COUNT(*)
-        FROM BOARD_REPORT_TBL
+        FROM board_report_tbl
         WHERE BOARD_NO = #{boardNo}
     </select>
 
-    <!-- 내가 신고했는지 -->
+    <!-- ?��? ?�고?�는지 -->
     <select id="selectIsReport" resultType="int">
         SELECT COUNT(*)
-        FROM BOARD_REPORT_TBL
+        FROM board_report_tbl
         WHERE BOARD_NO = #{boardNo}
           AND MEMBER_NO = #{memberNo}
     </select>
 
-    <!-- 신고 -->
+    <!-- ?�고 -->
     <insert id="insertReport">
-        INSERT INTO BOARD_REPORT_TBL
+        INSERT INTO board_report_tbl
         (
             MEMBER_NO,
             BOARD_NO,
@@ -400,16 +400,16 @@
             )
     </insert>
 
-    <!-- 신고 취소 -->
+    <!-- ?�고 취소 -->
     <delete id="deleteReport">
-        DELETE FROM BOARD_REPORT_TBL
+        DELETE FROM board_report_tbl
         WHERE MEMBER_NO = #{memberNo}
           AND BOARD_NO = #{boardNo}
     </delete>
 
     <select id="selectMemberNo" resultType="long">
         SELECT MEMBER_NO
-        FROM MEMBER_TBL
+        FROM member_tbl
         WHERE MEMBER_ID = #{memberId}
     </select>
 
@@ -437,9 +437,9 @@
 
             BC.BOARD_NO
 
-        FROM BOARD_COMMENT_TBL BC
+        FROM board_comment_tbl BC
 
-                 JOIN MEMBER_TBL M
+                 JOIN member_tbl M
                       ON BC.MEMBER_NO = M.MEMBER_NO
 
         WHERE BC.BOARD_NO = #{boardNo}  AND BC.BOARD_COMMENT_STATUS != 2
@@ -453,7 +453,7 @@
             useGeneratedKeys="true"
             keyProperty="boardCommentNo">
 
-        INSERT INTO BOARD_COMMENT_TBL
+        INSERT INTO board_comment_tbl
         (
             BOARD_COMMENT_CONTENT,
             MEMBER_NO,
@@ -492,9 +492,9 @@
 
             BC.BOARD_NO
 
-        FROM BOARD_COMMENT_TBL BC
+        FROM board_comment_tbl BC
 
-                 JOIN MEMBER_TBL M
+                 JOIN member_tbl M
                       ON BC.MEMBER_NO = M.MEMBER_NO
 
         WHERE BC.BOARD_COMMENT_NO =
@@ -502,19 +502,19 @@
 
     </select>
 
-    <!-- 댓글 수정 -->
+    <!-- ?��? ?�정 -->
     <update id="updateComment"
             parameterType="boardComment">
 
-        UPDATE BOARD_COMMENT_TBL
+        UPDATE board_comment_tbl
         SET BOARD_COMMENT_CONTENT = #{boardCommentContent}
         WHERE BOARD_COMMENT_NO = #{boardCommentNo}
 
     </update>
 
-    <!-- 댓글 신고 -->
+    <!-- ?��? ?�고 -->
     <insert id="insertCommentReport">
-        INSERT INTO BOARD_COMMENT_REPORT_TBL
+        INSERT INTO board_comment_report_tbl
         (
             MEMBER_NO,
             BOARD_COMMENT_NO,
@@ -530,38 +530,38 @@
             )
     </insert>
 
-    <!-- 게시글 공개/비공개 -->
+    <!-- 게시글 공개/비공�?-->
     <update id="updateBoardStatus" parameterType="board">
-        UPDATE BOARD_TBL
+        UPDATE board_tbl
         SET BOARD_STATUS = #{boardStatus}
         WHERE BOARD_NO = #{boardNo}
     </update>
 
-    <!-- 댓글 공개/비공개 -->
+    <!-- ?��? 공개/비공�?-->
     <update id="updateCommentStatus" parameterType="boardComment">
-        UPDATE BOARD_COMMENT_TBL
+        UPDATE board_comment_tbl
         SET BOARD_COMMENT_STATUS = #{commentStatus}
         WHERE BOARD_COMMENT_NO = #{boardCommentNo}
     </update>
 
-    <!-- 댓글 삭제 -->
+    <!-- ?��? ??�� -->
     <update id="deleteComment" parameterType="int">
-        UPDATE BOARD_COMMENT_TBL
+        UPDATE board_comment_tbl
         SET BOARD_COMMENT_STATUS = 2
         WHERE BOARD_COMMENT_NO = #{boardCommentNo}
     </update>
 
-    <!-- 내가 댓글 신고했는지 -->
+    <!-- ?��? ?��? ?�고?�는지 -->
     <select id="selectIsCommentReport" resultType="int">
         SELECT COUNT(*)
-        FROM BOARD_COMMENT_REPORT_TBL
+        FROM board_comment_report_tbl
         WHERE BOARD_COMMENT_NO = #{boardCommentNo}
           AND MEMBER_NO = #{memberNo}
     </select>
 
-    <!-- 댓글 신고 취소 -->
+    <!-- ?��? ?�고 취소 -->
     <delete id="deleteCommentReport">
-        DELETE FROM BOARD_COMMENT_REPORT_TBL
+        DELETE FROM board_comment_report_tbl
         WHERE MEMBER_NO = #{memberNo}
           AND BOARD_COMMENT_NO = #{boardCommentNo}
     </delete>
