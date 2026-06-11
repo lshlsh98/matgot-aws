@@ -1,4 +1,4 @@
-# matmatgotgot_project
+# [ 맛맛곳곳 ] Project
 
 ### 구조
 ```
