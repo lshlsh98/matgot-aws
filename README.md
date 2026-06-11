@@ -1,4 +1,4 @@
-# [ 맛맛곳곳 ] Project
+# [ 맛맛곳곳 ] Project _ TEAM TWOTWO - 김가연, 박지연, 이성현, 이은지
 
 ### 구조
 ```
