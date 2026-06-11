@@ -1,6 +1,7 @@
 # matmatgotgot_project
 
 ### 구조
+```
 matgot-aws/
 ├── docker-compose.yml
 ├── .env.example
@@ -117,3 +118,5 @@ matgot-aws/
             ├── trip/                    # TripMain, CreateCourse, CourseDetail, EditCourse
             ├── admin/                   # AdminPage
             └── else/                   # FAQ, 공지사항, 이용약관, 개인정보처리방침
+
+```
