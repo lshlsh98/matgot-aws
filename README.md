@@ -5,6 +5,7 @@
 ```
 matgot-aws/
 ├── docker-compose.yml
+├── .env
 ├── .env.example
 │
 ├── matmatgotgot_back/                  # Spring Boot 백엔드
