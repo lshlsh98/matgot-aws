@@ -287,10 +287,7 @@ const ReviewModify = () => {
                 {/* 기존 서버 파일 — X 버튼으로 삭제 표시 */}
                 {review.fileList.map((file, index) => (
                   <div key={`server-${index}`} className={styles.preview_item}>
-                    <img
-                      src={`${import.meta.env.VITE_BACKSERVER}/restaurants/${file}`}
-                      alt={`기존 이미지 ${index + 1}`}
-                    />
+                    <img src={`${file}`} alt={`기존 이미지 ${index + 1}`} />
                     <button
                       type="button"
                       className={styles.preview_delete}

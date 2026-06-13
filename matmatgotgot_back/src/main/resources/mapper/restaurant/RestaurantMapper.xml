@@ -24,24 +24,31 @@
             ROUND(r.rating_sum * 1.0 / NULLIF(r.review_total_count, 0), 1) AS rating_avg,
             m.member_id,
 
-            EXISTS (
-                SELECT 1
-                FROM rest_like_tbl rl
-                WHERE rl.rest_no = r.rest_no
-                  AND rl.member_id = #{memberId}
-            ) AS is_like,
+            CASE
+                WHEN #{memberId} IS NULL THEN FALSE
+                ELSE EXISTS (
+                    SELECT 1
+                    FROM rest_like_tbl rl
+                    WHERE rl.rest_no = r.rest_no
+                      AND rl.member_id = #{memberId}
+                )
+                END AS is_like,
 
-            EXISTS (
-                SELECT 1
-                FROM rest_report_tbl rr
-                WHERE rr.rest_no = r.rest_no
-                  AND rr.member_id = #{memberId}
-            ) AS is_report
+            CASE
+                WHEN #{memberId} IS NULL THEN FALSE
+                ELSE EXISTS (
+                    SELECT 1
+                    FROM rest_report_tbl rr
+                    WHERE rr.rest_no = r.rest_no
+                      AND rr.member_id = #{memberId}
+                )
+                END AS is_report
 
         FROM restaurant_tbl r
                  INNER JOIN member_tbl m
                             ON r.member_id = m.member_id
-        WHERE r.rest_no = #{restNo} AND r.rest_status = 'NORMAL'
+        WHERE r.rest_no = #{restNo}
+          AND r.rest_status = 'NORMAL'
     </select>
 
     <select id="getTags" resultType="String">
@@ -136,20 +143,21 @@
             r.visit_date AS review_visit,
             r.rating,
 
-            EXISTS (
-                SELECT 1
-                FROM review_like_tbl rl
-                WHERE rl.member_id = #{memberId}
-                  AND rl.review_no = r.review_no
-            ) AS is_liked
+            CASE
+                WHEN #{memberId} IS NULL THEN FALSE
+                ELSE EXISTS (
+                    SELECT 1
+                    FROM review_like_tbl rl
+                    WHERE rl.member_id = #{memberId}
+                      AND rl.review_no = r.review_no
+                )
+                END AS is_liked
 
         FROM review_tbl r
                  INNER JOIN member_tbl m
                             ON r.member_id = m.member_id
-
                  INNER JOIN restaurant_tbl rt
                             ON r.rest_no = rt.rest_no
-
         WHERE r.review_no = #{reviewNo}
           AND r.review_status = 0
     </select>
@@ -236,12 +244,15 @@
             r.review_total_count,
             ROUND(r.rating_sum * 1.0 / NULLIF(r.review_total_count, 0), 1) AS rating_avg,
 
-            EXISTS (
-                SELECT 1
-                FROM rest_like_tbl rl
-                WHERE rl.rest_no = r.rest_no
-                  AND rl.member_id = #{memberId}
-            ) AS is_like
+            CASE
+                WHEN #{memberId} IS NULL THEN FALSE
+                ELSE EXISTS(
+                    SELECT 1
+                    FROM rest_like_tbl rl
+                    WHERE rl.rest_no = r.rest_no
+                      AND rl.member_id = #{memberId}
+                )
+                END AS is_like
 
         FROM restaurant_tbl r
 
@@ -371,12 +382,14 @@
         r.review_total_count,
         ROUND( r.rating_sum * 1.0 / NULLIF(r.review_total_count, 0), 1) AS rating_avg,
 
-        EXISTS (
+        CASE WHEN #{memberId} IS NULL THEN FALSE
+        ELSE EXISTS (
         SELECT 1
         FROM rest_like_tbl rl
         WHERE rl.rest_no = r.rest_no
         AND rl.member_id = #{memberId}
-        ) AS is_like
+        )
+        END AS is_liked
 
         FROM restaurant_tbl r
 

@@ -168,9 +168,11 @@ const ReviewViewComment = ({ reviewNo }) => {
             }
           }}
         />
-        <button className={styles.regist_btn} onClick={registComment}>
-          댓글 등록
-        </button>
+        {loginMemberId && (
+          <button className={styles.regist_btn} onClick={registComment}>
+            댓글 등록
+          </button>
+        )}
       </div>
     </div>
   );

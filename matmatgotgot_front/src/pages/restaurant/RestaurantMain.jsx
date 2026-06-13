@@ -15,6 +15,7 @@ const RestaurantMain = () => {
 
   const lat = useAuthStore((state) => state.lat);
   const lng = useAuthStore((state) => state.lng);
+  const memberId = useAuthStore((state) => state.memberId);
 
   useEffect(() => {
     if (tab === "popular") {
@@ -59,36 +60,41 @@ const RestaurantMain = () => {
     <>
       <section className={styles.radio_zone}>
         <div className={styles.tab}>
-          <label>
-            <input
-              type="radio"
-              name="tab"
-              value="popular"
-              checked={tab === "popular"}
-              onChange={(e) => setTab(e.target.value)}
-            />
-            인기 맛집
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="tab"
-              value="like"
-              checked={tab === "like"}
-              onChange={(e) => setTab(e.target.value)}
-            />
-            찜한 맛집
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="tab"
-              value="region"
-              checked={tab === "region"}
-              onChange={(e) => setTab(e.target.value)}
-            />
-            근처 맛집
-          </label>
+          {memberId && (
+            <>
+              <label>
+                <input
+                  type="radio"
+                  name="tab"
+                  value="popular"
+                  checked={tab === "popular"}
+                  onChange={(e) => setTab(e.target.value)}
+                />
+                인기 맛집
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="tab"
+                  value="like"
+                  checked={tab === "like"}
+                  onChange={(e) => setTab(e.target.value)}
+                />
+                찜한 맛집
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="tab"
+                  value="region"
+                  checked={tab === "region"}
+                  onChange={(e) => setTab(e.target.value)}
+                />
+                근처 맛집
+              </label>
+            </>
+          )}
+
           {/* 근처 맛집 탭일 때만 주소변경 버튼 표시 */}
           {tab === "region" && (
             <button onClick={() => setModalOpen(true)}>주소변경</button>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const RestaruntViewReviews = ({ restNo }) => {
+const RestaruntViewReviews = ({ restNo, memberId }) => {
   const [reviewList, setRivewList] = useState([]);
   const [reviewsCnt, setReviewsCnt] = useState(0);
   const [page, setPage] = useState(0);
@@ -35,14 +35,16 @@ const RestaruntViewReviews = ({ restNo }) => {
       <div className={styles.review_top}>
         <div className={styles.review_count}>리뷰 수 {reviewsCnt}개</div>
         <div className={styles.btn_zone_reviews}>
-          <button
-            type="button"
-            onClick={() => {
-              navigate(`/receipt/review/${restNo}`);
-            }}
-          >
-            리뷰 작성하기
-          </button>
+          {memberId && (
+            <button
+              type="button"
+              onClick={() => {
+                navigate(`/receipt/review/${restNo}`);
+              }}
+            >
+              리뷰 작성하기
+            </button>
+          )}
         </div>
       </div>
 

@@ -5,6 +5,7 @@ import RestaurantItem from "../../components/restaurant/RestaurantItem";
 import Pagination from "../../components/ui/Pagination";
 import RestaurantMain from "./RestaurantMain";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const RestaurantDetailSearch = () => {
   const [region, setRegion] = useState("");
@@ -18,6 +19,7 @@ const RestaurantDetailSearch = () => {
   const [size] = useState(12);
   const [totalPage, setTotalPage] = useState(null);
   const [restName, setRestName] = useState("");
+  const memberId = useAuthStore((state) => state.memberId);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -240,14 +242,16 @@ const RestaurantDetailSearch = () => {
 
           {/* 맛집 등록 버튼 (화면 우하단 고정) */}
           <div className={styles.regist_btn}>
-            <button
-              type="button"
-              onClick={() => {
-                navigate(`/receipt/rest`);
-              }}
-            >
-              맛집 등록
-            </button>
+            {memberId && (
+              <button
+                type="button"
+                onClick={() => {
+                  navigate(`/receipt/rest`);
+                }}
+              >
+                맛집 등록
+              </button>
+            )}
           </div>
         </section>
       </div>

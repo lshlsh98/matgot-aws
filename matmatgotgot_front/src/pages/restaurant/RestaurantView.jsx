@@ -177,7 +177,7 @@ const RestaurantView = () => {
 
       {/* ===== 리뷰 영역 ===== */}
       <section className={styles.rest_reviews}>
-        <RestaruntViewReviews restNo={restNo} />
+        <RestaruntViewReviews restNo={restNo} memberId={memberId} />
       </section>
 
       {reportModal && (

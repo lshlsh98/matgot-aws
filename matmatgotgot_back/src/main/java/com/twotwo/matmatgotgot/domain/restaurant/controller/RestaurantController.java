@@ -127,10 +127,15 @@ public class RestaurantController {
         }
     }//
 
-    //
+    // 맛집 상세 info
     @GetMapping
     public ResponseEntity<?> restaurantViewInfo(@RequestParam Long restNo, Authentication auth) {
-        RestViewResponse restRes = restaurantService.restaurantViewInfo(auth.getName(), restNo);
+        String memberId = null;
+        if (auth != null) {
+            memberId = auth.getName();
+        }
+
+        RestViewResponse restRes = restaurantService.restaurantViewInfo(memberId, restNo);
 
         // 신고 기능 - 지연
         if (restRes == null) {
@@ -176,9 +181,15 @@ public class RestaurantController {
         }
     }//
 
+    // 리뷰 상세
     @GetMapping("/review")
     public ResponseEntity<?> getReviewView(@RequestParam Long reviewNo, Authentication auth) {
-        ReviewViewResponse res = restaurantService.getReviewView(reviewNo, auth.getName());
+        String memberId = null;
+        if (auth != null) {
+            memberId = auth.getName();
+        }
+
+        ReviewViewResponse res = restaurantService.getReviewView(reviewNo, memberId);
 
         if (res == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -223,7 +234,12 @@ public class RestaurantController {
     // 맛집 메인화면 인기
     @GetMapping("/popular")
     public ResponseEntity<?> getPopular(Authentication auth) {
-        List<Recommand> popular = restaurantService.getPopular(auth.getName());
+        String memberId = null;
+        if (auth != null) {
+            memberId = auth.getName();
+        }
+
+        List<Recommand> popular = restaurantService.getPopular(memberId);
 
         return ResponseEntity.ok(popular);
     }//
@@ -231,7 +247,12 @@ public class RestaurantController {
     // 맛집 메인화면 찜
     @GetMapping("/like")
     public ResponseEntity<?> getLike(Authentication auth) {
-        List<Recommand> like = restaurantService.getLike(auth.getName());
+        String memberId = null;
+        if (auth != null) {
+            memberId = auth.getName();
+        }
+
+        List<Recommand> like = restaurantService.getLike(memberId);
 
         return ResponseEntity.ok(like);
     }//
@@ -247,9 +268,14 @@ public class RestaurantController {
     // 맛집 메인 - 메인리스트
     @GetMapping("/main")
     public ResponseEntity<?> getMainList(@ModelAttribute MainListRequest req, Authentication auth) {
-        List<Recommand> mainList = restaurantService.getMainList(req, auth.getName());
+        String memberId = null;
+        if (auth != null) {
+            memberId = auth.getName();
+        }
 
-        int count = restaurantService.getMainListCount(req, auth.getName());
+        List<Recommand> mainList = restaurantService.getMainList(req, memberId);
+
+        int count = restaurantService.getMainListCount(req, memberId);
         int totalPage = (int) Math.ceil(count / (double) req.getSize());
 
         Map<String, Object> res = new HashMap<>();
