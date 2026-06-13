@@ -250,9 +250,9 @@
                     SELECT 1
                     FROM rest_like_tbl rl
                     WHERE rl.rest_no = r.rest_no
-                      AND rl.member_id = #{memberId}
+                    AND rl.member_id = #{memberId}
                 )
-                END AS is_like
+            END AS is_like
 
         FROM restaurant_tbl r
 
@@ -384,10 +384,10 @@
 
         CASE WHEN #{memberId} IS NULL THEN FALSE
         ELSE EXISTS (
-        SELECT 1
-        FROM rest_like_tbl rl
-        WHERE rl.rest_no = r.rest_no
-        AND rl.member_id = #{memberId}
+            SELECT 1
+            FROM rest_like_tbl rl
+            WHERE rl.rest_no = r.rest_no
+            AND rl.member_id = #{memberId}
         )
         END AS is_liked
 

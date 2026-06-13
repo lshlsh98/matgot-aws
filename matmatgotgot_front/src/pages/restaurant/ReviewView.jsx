@@ -36,7 +36,6 @@ const ReviewView = () => {
         setLiked(res.data.liked);
       })
       .catch((err) => {
-
         if (err.response?.status === 404) {
           Swal.fire({
             title: "조회할 수 없는 리뷰입니다.",
@@ -83,6 +82,11 @@ const ReviewView = () => {
   };
 
   const likeToggle = () => {
+    if (!isLoggedIn) {
+      Swal.fire({ title: "로그인이 필요합니다.", icon: "warning" });
+      return;
+    }
+
     if (!liked) {
       axios
         .patch(
