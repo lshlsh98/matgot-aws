@@ -162,13 +162,15 @@ const ReviewCommentItem = ({
 
       {/* ── 답글 / 신고 버튼 ── */}
       <div className={styles.comment_actions}>
-        <button
-          type="button"
-          className={styles.action_btn}
-          onClick={() => setShowReplyInput(true)}
-        >
-          답글
-        </button>
+        {loginMemberId && (
+          <button
+            type="button"
+            className={styles.action_btn}
+            onClick={() => setShowReplyInput(true)}
+          >
+            답글
+          </button>
+        )}
 
         {/* 신고 버튼: handleReport 에서 로그인·자기신고 검사 후 모달 오픈 */}
         <button
