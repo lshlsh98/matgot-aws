@@ -1,181 +1,125 @@
-import { useState, useEffect } from "react"; // useEffect 추가
-import ReviewCommentItem from "./ReviewCommentItem";
-import styles from "./ReviewViewComment.module.css";
-import axios from "axios";
-import { useAuthStore } from "../../store/useAuthStore";
+import { useState, useEffect } from "react";
+import styles from "./ReviewViewInfo.module.css";
+import { Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
-const ReviewViewComment = ({ reviewNo }) => {
-  // 로그인한 회원 번호 (본인 댓글 수정/삭제 여부 판단에 사용)
-  const loginMemberId = useAuthStore((state) => state.memberId);
-  // const loginMemberNo = authStore.memberId;
+const ReviewViewInfo = ({ review }) => {
+  // review 데이터가 아직 없을 때 렌더링 생략
+  if (!review) return null;
 
-  // 서버에서 받은 전체 댓글 flat list
-  const [commentList, setCommentList] = useState([]);
+  const imgBaseUrl = import.meta.env.VITE_BACKSERVER;
 
-  // 새 댓글 입력값
-  const [newCommentContent, setNewCommentContent] = useState("");
+  // 이미지 배열 (없으면 빈 배열)
+  const images = review.images ?? [];
 
-  // 댓글 목록 조회
-  // reviewNo 가 바뀔 때마다 재조회
-  useEffect(() => {
-    fetchComments();
-  }, [reviewNo]);
-
-  const fetchComments = () => {
-    axios
-      .get(
-        `${import.meta.env.VITE_BACKSERVER}/restaurants/review/${reviewNo}/comments`,
-      )
-      .then((res) => {
-        setCommentList(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // 새 댓글 등록 (depth = 0)
-  const registComment = () => {
-    if (!newCommentContent.trim()) return; // 빈 내용 방지
-
-    axios
-      .post(
-        `${import.meta.env.VITE_BACKSERVER}/restaurants/review/${reviewNo}/comments`,
-        {
-          content: newCommentContent,
-          depth: 0, // 일반 댓글
-          parentComment: null, // 부모 없음
-        },
-      )
-      .then((res) => {
-        // 등록된 댓글을 목록 끝에 추가
-        setCommentList([...commentList, res.data]);
-        setNewCommentContent(""); // 입력창 초기화
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // 댓글/대댓글 수정
-  // commentNo : 수정할 댓글 번호
-  // newContent: 수정된 내용
-  const updateComment = (commentNo, newContent) => {
-    axios
-      .patch(
-        `${import.meta.env.VITE_BACKSERVER}/restaurants/review/comment/${commentNo}`,
-        {
-          content: newContent,
-        },
-      )
-      .then(() => {
-        // 로컬 상태의 해당 댓글 내용만 업데이트
-        setCommentList(
-          commentList.map((c) =>
-            c.commentNo === commentNo ? { ...c, content: newContent } : c,
-          ),
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // 댓글/대댓글 삭제
-  // DB에서 ON DELETE CASCADE 로 대댓글도 함께 삭제되므로
-  // 프론트에서도 해당 댓글과 그 대댓글을 모두 목록에서 제거
-  const deleteComment = (commentNo) => {
-    axios
-      .delete(
-        `${import.meta.env.VITE_BACKSERVER}/restaurants/review/comment/${commentNo}`,
-      )
-      .then(() => {
-        setCommentList(
-          commentList.filter(
-            (c) =>
-              c.commentNo !== commentNo && // 해당 댓글 제거
-              c.parentComment !== commentNo, // 그 대댓글도 제거 (CASCADE 반영)
-          ),
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // 대댓글 등록 (depth = 1)
-  // parentCommentNo : 부모 댓글 번호 (parent_comment 컬럼)
-  // replyContent    : 대댓글 내용
-  const registReply = (parentCommentNo, replyContent) => {
-    if (!replyContent.trim()) return; // 빈 내용 방지
-
-    axios
-      .post(
-        `${import.meta.env.VITE_BACKSERVER}/restaurants/review/${reviewNo}/comments`,
-        {
-          content: replyContent,
-          depth: 1, // 대댓글
-          parentComment: parentCommentNo, // 부모 댓글 번호
-        },
-      )
-      .then((res) => {
-        // 등록된 대댓글을 목록에 추가 (렌더링 시 부모 아래에 그룹화됨)
-        setCommentList([...commentList, res.data]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // 렌더링용 그룹화 헬퍼
-  // depth=0 인 루트 댓글만 필터링
-  const rootComments = commentList.filter((c) => c.depth === 0);
-
-  // 특정 댓글 번호의 대댓글(depth=1) 목록 반환
-  const getReplies = (commentNo) =>
-    commentList.filter((c) => c.parentComment === commentNo);
+  // 별점 렌더링 헬퍼
+  const renderStars = (rating = 0) =>
+    [1, 2, 3, 4, 5].map((n) => (
+      <span
+        key={n}
+        className={n <= rating ? styles.star_filled : styles.star_empty}
+      >
+        ★
+      </span>
+    ));
 
   return (
-    <div className={styles.comment_section}>
-      {/* ── 댓글 수 표시 ── */}
-      <div className={styles.comment_count}>댓글 {rootComments.length}개</div>
+    <>
+      {/* ── 작성자 정보 ── */}
+      <div className={styles.writer_info}>
+        <div className={styles.review_writer}>
+          {/* 프로필 이미지 / 기본 아이콘 */}
+          <div
+            className={`${styles.member_thumb} ${
+              review.memberThumb ? styles.thumb_exists : styles.thumb_default
+            }`}
+          >
+            {review.memberThumb ? (
+              <img
+                src={`${imgBaseUrl}/matgot/member/${review.memberThumb}`}
+                alt="프로필 이미지"
+              />
+            ) : (
+              <span className="material-icons">account_circle</span>
+            )}
+          </div>
 
-      {/* ── 댓글 목록 ── */}
-      {rootComments.map((comment) => (
-        <ReviewCommentItem
-          key={comment.commentNo}
-          comment={comment}
-          replies={getReplies(comment.commentNo)} // 해당 댓글의 대댓글 전달
-          loginMemberId={loginMemberId}
-          onUpdate={updateComment} // 수정 콜백
-          onDelete={deleteComment} // 삭제 콜백
-          onReplyAdd={registReply} // 대댓글 등록 콜백
-        />
-      ))}
-
-      {/* ── 새 댓글 입력 ── */}
-      <div className={styles.input_item}>
-        <textarea
-          className={styles.comment_textarea}
-          value={newCommentContent}
-          placeholder="댓글을 입력하세요"
-          onChange={(e) => setNewCommentContent(e.target.value)}
-          // Enter(Shift 없이) 입력 시 등록
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              registComment();
-            }
-          }}
-        />
-        {loginMemberId && (
-          <button className={styles.regist_btn} onClick={registComment}>
-            댓글 등록
-          </button>
-        )}
+          {/* 이름 + 현지인 뱃지 */}
+          <div className={styles.name_badge_row}>
+            <span className={styles.member_name}>{review.memberName}</span>
+            {review.isLocal && (
+              <span className={styles.member_badge}>현지인</span>
+            )}
+          </div>
+        </div>
+        <div className={styles.rest_info}>
+          <div className={styles.rest_name}>{review.restName}</div>
+          <div className={styles.rest_addr}>{review.restAddr}</div>
+        </div>
       </div>
-    </div>
+
+      {/* ── 사진 Swiper 캐러셀 ── */}
+      {review.images.length > 0 && (
+        <div className={styles.photo_swiper}>
+          <Swiper
+            modules={[Navigation, Pagination]}
+            navigation={review.images.length > 1} /* 좌우 화살표 버튼 */
+            pagination={{ clickable: true }} /* 하단 도트 */
+            spaceBetween={0}
+            slidesPerView={1}
+          >
+            {review.images.map((image, idx) => (
+              <SwiperSlide key={idx}>
+                <img
+                  className={styles.swiper_img}
+                  src={`${image}`}
+                  alt="리뷰 이미지"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      )}
+
+      {/* ── 리뷰 내용 ── */}
+      <div className={styles.content}>{review.reviewContent}</div>
+
+      {/* ── 태그 ── */}
+      {review.tags && review.tags.length > 0 && (
+        <div className={styles.tags}>
+          {review.tags.map((tag, i) => (
+            <span key={i} className={styles.tag_item}>
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* ── 방문 정보 (방문일 / 메뉴 / 별점) ── */}
+      <div className={styles.review_meta}>
+        {/* 방문일 */}
+        <div className={styles.meta_item}>
+          <p className={styles.meta_label}>방문일</p>
+          <p className={styles.meta_value}>{review.reviewVisit}</p>
+        </div>
+
+        {/* 메뉴 */}
+        <div className={styles.meta_item}>
+          <p className={styles.meta_label}>메뉴</p>
+          <p className={styles.meta_value}>{review.reviewMenu?.join(", ")}</p>
+        </div>
+
+        {/* 별점 — grid에서 full-width 배치 (meta_full 클래스) */}
+        <div className={`${styles.meta_item} ${styles.meta_full}`}>
+          <p className={styles.meta_label}>별점</p>
+          <p className={styles.meta_value}>{renderStars(review.rating)}</p>
+        </div>
+      </div>
+    </>
   );
 };
 
-export default ReviewViewComment;
+export default ReviewViewInfo;
