@@ -330,10 +330,21 @@ const Login = () => {
                 <Link to={"/finding"}>
                   <div className={styles.idpw}>아이디/비밀번호 찾기</div>
                 </Link>
+
                 <button type="submit" className={styles.submit}>
                   로그인
                 </button>
               </form>
+              {/* [추가] 테스트 계정 안내 박스 - 로그인 버튼 아래 */}
+              <div className={styles.test_account}>
+                <p className={styles.test_account_title}>테스트 계정</p>
+                <p>
+                  아이디: <strong>qqqq1111</strong>
+                </p>
+                <p>
+                  비밀번호: <strong>qqqq1111</strong>
+                </p>
+              </div>
               <div className={styles.social_wrap}>
                 <p>소셜 로그인</p>
                 <div className={styles.social}>
