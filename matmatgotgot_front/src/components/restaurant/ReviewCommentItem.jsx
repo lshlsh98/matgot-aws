@@ -233,7 +233,7 @@ const ReviewCommentItem = ({
               loginMemberId={loginMemberId}
               onUpdate={onUpdate}
               onDelete={onDelete}
-              // ⚠ reportModal/setReportModal 을 내려주지 않음
+              //  reportModal/setReportModal 을 내려주지 않음
               //   ReplyItem 은 자체 state 로 모달을 관리함
               //   (댓글마다 독립된 모달이 필요하기 때문)
             />

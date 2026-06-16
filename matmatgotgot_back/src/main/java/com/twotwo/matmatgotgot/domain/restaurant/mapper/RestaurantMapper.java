@@ -70,10 +70,15 @@ public interface RestaurantMapper {
 
     // Main
     List<Restaurant> selectMyWishList(@Param("memberId") String memberId);
+
     List<Restaurant> selectPopularList();
+
     List<Restaurant> selectAllList();
+
     List<RestaurantMapMarkerDTO> selectWishMapMarkers(@Param("memberId") String memberId);
+
     List<RestaurantMapMarkerDTO> selectVisitedMapMarkers(@Param("memberId") String memberId);
+
     List<Recommand> getMainList(@Param("req") MainListRequest req,
                                 @Param("memberId") String memberId);
 
@@ -84,7 +89,6 @@ public interface RestaurantMapper {
 
     int increaseRatingAvg(@Param("restNo") Long restNo,
                           @Param("rating") int rating);
-
 
     int restReport(ReportRequest report);
 
@@ -105,7 +109,6 @@ public interface RestaurantMapper {
     int restaurantModify(Restaurant restaurant);
 
     int reviewModifyContent(ReviewCreateRequest req);
-
 
     int reviewDeleteTags(Long reviewNo);
 

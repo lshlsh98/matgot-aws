@@ -7,7 +7,6 @@ import { useAuthStore } from "../../store/useAuthStore";
 const ReviewViewComment = ({ reviewNo }) => {
   // 로그인한 회원 번호 (본인 댓글 수정/삭제 여부 판단에 사용)
   const loginMemberId = useAuthStore((state) => state.memberId);
-  // const loginMemberNo = authStore.memberId;
 
   // 서버에서 받은 전체 댓글 flat list
   const [commentList, setCommentList] = useState([]);
