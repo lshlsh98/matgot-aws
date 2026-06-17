@@ -158,13 +158,10 @@ const ReviewViewComment = ({ reviewNo }) => {
           className={styles.comment_textarea}
           value={newCommentContent}
           placeholder="댓글을 입력하세요"
-          onChange={(e) => setNewCommentContent(e.target.value)}
-          // Enter(Shift 없이) 입력 시 등록
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              registComment();
-            }
+          onChange={(e) => {
+            setNewCommentContent(e.target.value);
+            e.target.style.height = "auto";
+            e.target.style.height = e.target.scrollHeight + "px";
           }}
         />
         {loginMemberId && (
