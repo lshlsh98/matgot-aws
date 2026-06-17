@@ -1,6 +1,5 @@
 services:
-
-  # ── Backend (Spring Boot) ────────────────────────────────────────────────
+  # Backend (Spring Boot)
   backend:
     build:
       context: ./matmatgotgot_back
@@ -52,7 +51,7 @@ services:
     networks:
       - matgot-net
 
-  # ── Frontend (React + Nginx) ─────────────────────────────────────────────
+  # Frontend (React + Nginx)
   frontend:
     build:
       context: ./matmatgotgot_front
