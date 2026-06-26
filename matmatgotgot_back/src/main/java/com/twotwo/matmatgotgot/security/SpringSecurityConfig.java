@@ -77,8 +77,8 @@ public class SpringSecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         
         config.setAllowedOrigins(List.of(
-            "http://localhost:5173",
             "https://d2lg74d5mqmhqe.cloudfront.net",
+            "http://localhost:5173",
             "http://ec2-15-165-96-13.ap-northeast-2.compute.amazonaws.com"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS")); // OPTIONS 포함 필수
